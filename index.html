@@ -8,11 +8,24 @@
 <body>
 
     <div class="canvas">
-        <svg width="600" height="600">
-
-        </svg>
     </div>
 
+
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-firestore.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyAKrGevz0ByVdYfLV1m3_Jo6NkM4aoMsH0",
+        authDomain: "my-d3-firebase.firebaseapp.com",
+        databaseURL: "https://my-d3-firebase.firebaseio.com",
+        projectId: "my-d3-firebase",
+        storageBucket: "my-d3-firebase.appspot.com",
+        messagingSenderId: "487364808201"
+    };
+    firebase.initializeApp(config);
+    const db = firebase.firestore();
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.js"></script>
     <script src="index.js"></script>
 </body>

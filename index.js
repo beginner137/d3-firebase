@@ -1,19 +1,70 @@
-const svg = d3.select("svg");
+const svg = d3
+  .select(".canvas")
+  .append("svg")
+  .attr("width", 600)
+  .attr("height", 600);
 
-d3.json("planets.json").then(data => {
-  const circs = svg.selectAll("circle").data(data);
+const margin = { top: 20, right: 20, bottom: 100, left: 100 };
+const graphWidth = 600 - margin.left - margin.right;
+const graphHeight = 600 - margin.top - margin.bottom;
 
-  circs
-    .attr("cy", 200)
-    .attr("cx", d => d.distance)
-    .attr("r", d => d.radius)
-    .attr("fill", d => d.fill);
+const graph = svg
+  .append("g")
+  .attr("width", graphWidth)
+  .attr("height", graphHeight)
+  .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-  circs
-    .enter()
-    .append("circle")
-    .attr("cy", 200)
-    .attr("cx", d => d.distance)
-    .attr("r", d => d.radius)
-    .attr("fill", d => d.fill);
-});
+const xAxisGroup = graph
+  .append("g")
+  .attr("transform", `translate(0, ${graphHeight})`);
+const yAxisGroup = graph.append("g");
+
+db.collection("dishes")
+  .get()
+  .then(res => {
+    console.log(res);
+    var data = [];
+    res.docs.forEach(doc => {
+      data.push(doc.data());
+    });
+    console.log(data);
+    // compare using d.orders
+    const y = d3
+      .scaleLinear()
+      .domain([0, d3.max(data, d => d.orders)])
+      .range([graphHeight, 0]);
+    const x = d3
+      .scaleBand()
+      .domain(data.map(item => item.name))
+      .range([0, 500])
+      .paddingInner(0.2)
+      .paddingOuter(0.2);
+    const rects = graph
+      .selectAll("rect")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("width", x.bandwidth)
+      .attr("height", d => graphHeight - y(d.orders))
+      .attr("fill", "orange")
+      .attr("x", (d, i) => x(d.name))
+      .attr("y", d => y(d.orders));
+    //create and call the axes
+    const xAxis = d3.axisBottom(x);
+    const yAxis = d3
+      .axisLeft(y)
+      // how many ticks
+      .ticks(3)
+      // format each tick item
+      .tickFormat(d => d + "orders");
+
+    xAxisGroup.call(xAxis);
+    yAxisGroup.call(yAxis);
+
+    xAxisGroup
+      .selectAll("text")
+      .attr("transform", "rotate(-40)")
+      //text anchor is where the text be rotated, the default is center
+      .attr("text-anchor", "end")
+      .attr("fill", "orange");
+  });
