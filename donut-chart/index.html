@@ -41,7 +41,7 @@
                             <button class="btn-large pink white-text">Add Item</button>
                         </div>
                         <div class="input-field center">
-                            <p class="red-text" id="error">test</p>
+                            <p class="red-text" id="error"></p>
                         </div>
                     </div>
 
@@ -53,6 +53,25 @@
         </div>
     </div>
 
+
+
+
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-firestore.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyAKrGevz0ByVdYfLV1m3_Jo6NkM4aoMsH0",
+        authDomain: "my-d3-firebase.firebaseapp.com",
+        databaseURL: "https://my-d3-firebase.firebaseio.com",
+        projectId: "my-d3-firebase",
+        storageBucket: "my-d3-firebase.appspot.com",
+        messagingSenderId: "487364808201"
+    };
+    firebase.initializeApp(config);
+    const db = firebase.firestore();
+
+    </script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="index.js"></script>
     <script src="graph.js"></script>
