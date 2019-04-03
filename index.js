@@ -44,6 +44,7 @@ const yAxis = d3
   .ticks(3)
   .tickFormat(d => d + " orders");
 
+const t = d3.transition().duration(15000);
 // the update function
 const update = data => {
   // join the data to circs
@@ -54,13 +55,14 @@ const update = data => {
   y.domain([0, d3.max(data, d => d.orders)]);
   x.domain(data.map(item => item.name));
 
-  // add attrs to rects already in the DOM
+  // update attrs to rects already in the DOM
   rects
     .attr("width", x.bandwidth)
-    .attr("height", d => graphHeight - y(d.orders))
     .attr("fill", "orange")
-    .attr("x", d => x(d.name))
-    .attr("y", d => y(d.orders));
+    .attr("x", d => x(d.name));
+  // .transition(t)
+  // .attr("height", d => graphHeight - y(d.orders))
+  // .attr("y", d => y(d.orders));
 
   // append the enter selection to the DOM
   rects
@@ -71,8 +73,9 @@ const update = data => {
     .attr("fill", "orange")
     .attr("x", d => x(d.name))
     .attr("y", graphHeight)
-    .transition()
-    .duration(1000)
+    .merge(rects)
+    .transition(t)
+    .attrTween("width", widthTween)
     .attr("y", d => y(d.orders))
     .attr("height", d => graphHeight - y(d.orders));
 
@@ -101,3 +104,15 @@ db.collection("dishes").onSnapshot(res => {
   });
   update(data);
 });
+
+//TWEENS
+const widthTween = d => {
+  // the starting position and the ending position
+  // d3.interpolate returns a function we call i
+  let i = d3.interpolate(0, x.bandwidth());
+
+  // t is the time here
+  return function(t) {
+    return i(t);
+  };
+};
