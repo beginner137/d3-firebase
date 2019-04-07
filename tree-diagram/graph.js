@@ -8,6 +8,73 @@ const svg = d3
 
 const graph = svg.append("g").attr("transform", "translate(50,50)");
 
+// data strat
+const stratify = d3
+  .stratify()
+  .id(d => d.name)
+  .parentId(d => d.parent);
+
+const tree = d3.tree().size([dims.width, dims.height]);
+
+// create ordinal scale
+const colour = d3.scaleOrdinal(["#f4511e", "#e91e63", "#e53935", "#9c27b0"]);
+
+const update = data => {
+  // remove current nodes
+  graph.selectAll(".node").remove();
+  graph.selectAll(".link").remove();
+  // update ordinal scale domain
+  colour.domain(data.map(item => item.department));
+
+  const rootNode = stratify(data);
+  // find the x, y coords of the tree
+  const treeData = tree(rootNode);
+  // get nodes selection and join data
+  const nodes = graph.selectAll(".node").data(treeData.descendants());
+
+  const links = graph.selectAll(".link").data(treeData.links());
+
+  links
+    .enter()
+    .append("path")
+    .attr("class", "link")
+    .attr("fill", "none")
+    .attr("stroke", "#aaa")
+    .attr("stroke-width", 2)
+    .attr(
+      "d",
+      d3
+        .linkVertical()
+        .x(d => d.x)
+        .y(d => d.y)
+    );
+
+  // create enter node groups
+  const enterNodes = nodes
+    .enter()
+    .append("g")
+    .attr("class", "node")
+    .attr("transform", d => `translate(${d.x}, ${d.y})`);
+  // append rects to enter nodes
+  enterNodes
+    .append("rect")
+    .attr("fill", d => colour(d.data.department))
+    .attr("stroke", "#555")
+    .attr("stroke-width", 2)
+    .attr("height", 50)
+    .attr("width", d => d.data.name.length * 20)
+    .attr("transform", d => {
+      var x = d.data.name.length * 10;
+      return `translate(${-x}, -25)`;
+    });
+  // append name text
+  enterNodes
+    .append("text")
+    .attr("text-anchor", "middle")
+    .attr("fill", "white")
+    .text(d => d.data.name);
+};
+
 // data & firebase hook-up
 var data = [];
 db.collection("employees").onSnapshot(res => {
@@ -29,5 +96,5 @@ db.collection("employees").onSnapshot(res => {
         break;
     }
   });
-  console.log(data);
+  update(data);
 });
