@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="style.css">
-
     <title>The Dojo</title>
 </head>
 <body class="grey darken-4">
@@ -27,7 +26,7 @@
                 <button data-activity="swimming">Swimming</button>
                 <button data-activity="walking">Walking</button>
             </div>
-            <div class="col s12 16 push-l1">
+            <div class="col s12 l6 push-l1">
                 <div class="canvas"></div>
             </div>
         </div>
@@ -41,10 +40,25 @@
     </div>
 
 
+    <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-firestore.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyAKrGevz0ByVdYfLV1m3_Jo6NkM4aoMsH0",
+        authDomain: "my-d3-firebase.firebaseapp.com",
+        databaseURL: "https://my-d3-firebase.firebaseio.com",
+        projectId: "my-d3-firebase",
+        storageBucket: "my-d3-firebase.appspot.com",
+        messagingSenderId: "487364808201"
+      };
+      firebase.initializeApp(config);
+      const db = firebase.firestore();
+    </script>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="index.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="index.js"></script>
     <script src="graph.js"></script>
 </body>
 </html>
